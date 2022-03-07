@@ -1,0 +1,5 @@
+name: code_testing
+channels:
+  - conda-forge
+dependencies: 
+- numpy
