@@ -35,8 +35,8 @@ def get_website_content(url: str):
     return website
 
 
-def download_dois_one_issue_solid_earth(volume: int,
-                                        issue: int) -> List[str]:
+def download_dois_single_issue_solid_earth(volume: int,
+                                           issue: int) -> List[str]:
     """Function to download the DOI numbers of one Solid Earth Issue of one Volume
 
     Parameters
@@ -111,8 +111,8 @@ def download_dois_multiple_issues_solid_earth(volume: int,
 
     # Extracting DOI Numbers for each issue and store them in a new list
     for issue_number in issues:
-        dois_one_issue = download_dois_one_issue_solid_earth(volume=volume,
-                                                             issue=issue_number)
+        dois_one_issue = download_dois_single_issue_solid_earth(volume=volume,
+                                                                issue=issue_number)
 
         dois_se = dois_se + dois_one_issue
 
@@ -164,7 +164,8 @@ def download_dois_solid_earth(volume_start: int = 1,
     return dois_se
 
 
-def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_number_start: int = 1, page_number_end: int = 100):
+def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_number_start: int = 1,
+                           page_number_end: int = 100):
     """ Function to download EarthDoc DOI Numbers
 
     Parameters:
@@ -205,7 +206,7 @@ def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_
         raise ValueError('Please use only either 20, 50 or 100 as a value for the titles per page')
 
     # Creating array of pages
-    pages = np.arange(page_number_start, page_number_end+1,1)
+    pages = np.arange(page_number_start, page_number_end + 1, 1)
 
     # Creating empty list to store DOI numbers
     dois_earthdoc = []
@@ -218,7 +219,10 @@ def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_
 
         website = get_website_content(url)
 
-        doi_earthdoc = [website.split('content/papers/')[j+1].split('data-itemId')[0].split('dir=')[0].split('/-->')[0].split('>\n<i')[0].split('"')[0].split('>\n<i')[0].split(',http://')[0] for j in range(len(website.split('content/papers/'))-1)]
+        doi_earthdoc = [
+            website.split('content/papers/')[j + 1].split('data-itemId')[0].split('dir=')[0].split('/-->')[0].split(
+                '>\n<i')[0].split('"')[0].split('>\n<i')[0].split(',http://')[0] for j in
+            range(len(website.split('content/papers/')) - 1)]
 
         dois_earthdoc = dois_earthdoc + doi_earthdoc
 
@@ -262,9 +266,214 @@ def create_earth_doc_url(conference_url: str, titles_per_page: int = 20, page_nu
     if titles_per_page == 20:
         url = 'https://www.earthdoc.org/content/proceedings/' + conference_url + '?page=' + str(page_number)
     else:
-        url = 'https://www.earthdoc.org/content/proceedings/' + conference_url + '?pageSize=' + str(titles_per_page) + '&page=' + str(page_number)
+        url = 'https://www.earthdoc.org/content/proceedings/' + conference_url + '?pageSize=' + str(
+            titles_per_page) + '&page=' + str(page_number)
 
     return url
+
+
+def download_dois_single_volume_zdgg(volume_number: int) -> List[str]:
+    """ FUnction to download the DOI numbers of one ZDGG volume
+
+    Parameters:
+    ___________
+
+        volume_number : int
+            Volume number
+
+    """
+
+    # Checking that the volume number is of type int
+    if not isinstance(volume_number, (int, np.int32)):
+        raise TypeError('Volume Number must be of type int')
+
+    # Creating URL
+    url = 'https://www.schweizerbart.de/papers/zdgg/list/%s' % volume_number
+
+    # Getting Website Data
+    website = get_website_content(url=url)
+
+    dois_zdgg = [website.split('DOI: ')[j + 1].split('\n')[0] for j in range(len(website.split('DOI: ')) - 1)]
+
+    return dois_zdgg
+
+
+def download_dois_single_volume_jmogv(volume_number: int) -> List[str]:
+    """ FUnction to download the DOI numbers of one JMOGV volume
+
+    Parameters:
+    ___________
+
+        volume_number : int
+            Volume number
+
+    """
+
+    # Checking that the volume number is of type int
+    if not isinstance(volume_number, (int, np.int32)):
+        raise TypeError('Volume Number must be of type int')
+
+    # Creating URL
+    url = 'https://www.schweizerbart.de/papers/jber_oberrh/list/%s' % volume_number
+
+    # Getting Website Data
+    website = get_website_content(url=url)
+
+    dois_jmogv = [website.split('DOI: ')[j+1].split('\n')[0] for j in range(len(website.split('DOI: '))-1)]
+
+    return dois_jmogv
+
+
+def download_dois_multiple_volumes_zdgg(volume_start: int, volume_end: int = 172) -> List[str]:
+    """ Function to download DOI numbers of multiple ZDGG volumes
+
+    Parameters:
+    ___________
+
+        volume_start: int
+            Volume number start
+
+        volume_end: int
+            Volume number end
+
+    """
+
+    # Checking that the volume number start is of type int
+    if not isinstance(volume_start, int):
+        raise TypeError('Volume Number Start must be of type int')
+
+    # Checking that the volume number end is of type int
+    if not isinstance(volume_end, int):
+        raise TypeError('Volume Number End must be of type int')
+
+    # Checking that the current volume is at 13
+    if volume_end > 172:
+        raise ValueError('The current latest volume is number 172')
+
+    # Defining range of issues
+    step = 1
+    volumes = np.arange(volume_start, volume_end + 1, step)
+
+    # Defining empty list to store DOI Numbers
+    dois_zdgg = []
+
+    # Extracting DOI Numbers for each issue and store them in a new list
+    for volume_number in volumes:
+        dois_single_issue = download_dois_single_volume_zdgg(volume_number=volume_number)
+
+        dois_zdgg = dois_zdgg + dois_single_issue
+
+    return dois_zdgg
+
+
+def download_dois_multiple_volumes_jmogv(volume_start: int, volume_end: int = 172) -> List[str]:
+    """ Function to download DOI numbers of multiple JMOGV volumes
+
+    Parameters:
+    ___________
+
+        volume_start: int
+            Volume number start
+
+        volume_end: int
+            Volume number end
+
+    """
+
+    # Checking that the volume number start is of type int
+    if not isinstance(volume_start, int):
+        raise TypeError('Volume Number Start must be of type int')
+
+    # Checking that the volume number end is of type int
+    if not isinstance(volume_end, int):
+        raise TypeError('Volume Number End must be of type int')
+
+    # Checking that the current volume is at 13
+    if volume_end > 103:
+        raise ValueError('The current latest volume is number 103')
+
+    # Defining range of issues
+    step = 1
+    volumes = np.arange(volume_start, volume_end + 1, step)
+
+    # Defining empty list to store DOI Numbers
+    dois_jmogv = []
+
+    # Extracting DOI Numbers for each issue and store them in a new list
+    for volume_number in volumes:
+        dois_single_issue = download_dois_single_volume_jmogv(volume_number=volume_number)
+
+        dois_jmogv = dois_jmogv + dois_single_issue
+
+    return dois_jmogv
+
+
+def download_dois_single_volume_njgpa(volume_number: int) -> List[str]:
+    """ FUnction to download the DOI numbers of one NJGPA volume
+
+    Parameters:
+    ___________
+
+        volume_number : int
+            Volume number
+
+    """
+
+    # Checking that the volume number is of type int
+    if not isinstance(volume_number, (int, np.int32)):
+        raise TypeError('Volume Number must be of type int')
+
+    # Creating URL
+    url = 'https://www.schweizerbart.de/papers/njgpa/list/%s' % volume_number
+
+    # Getting Website Data
+    website = get_website_content(url=url)
+
+    dois_njgpa = [website.split('DOI: ')[j+1].split('\n')[0] for j in range(len(website.split('DOI: '))-1)]
+
+    return dois_njgpa
+
+
+def download_dois_multiple_volumes_njgpa(volume_start: int, volume_end: int = 172) -> List[str]:
+    """ Function to download DOI numbers of multiple NJGPA volumes
+
+    Parameters:
+    ___________
+
+        volume_start: int
+            Volume number start
+
+        volume_end: int
+            Volume number end
+
+    """
+
+    # Checking that the volume number start is of type int
+    if not isinstance(volume_start, int):
+        raise TypeError('Volume Number Start must be of type int')
+
+    # Checking that the volume number end is of type int
+    if not isinstance(volume_end, int):
+        raise TypeError('Volume Number End must be of type int')
+
+    # Checking that the current volume is at 13
+    if volume_end > 303:
+        raise ValueError('The current latest volume is number 303')
+
+    # Defining range of issues
+    step = 1
+    volumes = np.arange(volume_start, volume_end + 1, step)
+
+    # Defining empty list to store DOI Numbers
+    dois_njgpa = []
+
+    # Extracting DOI Numbers for each issue and store them in a new list
+    for volume_number in volumes:
+        dois_single_issue = download_dois_single_volume_njgpa(volume_number=volume_number)
+
+        dois_njgpa = dois_njgpa + dois_single_issue
+
+    return dois_njgpa
 
 
 def save_doi_numbers(list_dois: list,
