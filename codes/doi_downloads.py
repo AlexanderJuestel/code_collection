@@ -35,12 +35,16 @@ def get_website_content(url: str):
     return website
 
 
-def download_dois_single_issue_solid_earth(volume: int,
-                                           issue: int) -> List[str]:
+def download_dois_single_issue_copernicus(journal: str = None,
+                                          volume: int = None,
+                                          issue: int = None) -> List[str]:
     """Function to download the DOI numbers of one Solid Earth Issue of one Volume
 
     Parameters
     __________
+
+        journal: str
+            Journal identifier
 
         volume: int, np.int32
             Volume Number
@@ -50,30 +54,62 @@ def download_dois_single_issue_solid_earth(volume: int,
 
     """
 
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the correct journal identifier is provided
+    if journal not in ['se',
+                       'adgeo',
+                       'gmd',
+                       'esurf',
+                       'esd',
+                       'gc',
+                       'gi',
+                       'hess',
+                       'nhess',
+                       'npg',
+                       'angeo',
+                       'acp',
+                       'amt',
+                       'bg',
+                       'cp',
+                       'gchron',
+                       'os',
+                       'soil',
+                       'tc'
+                       'wcd']:
+        raise ValueError('Journal identifier not recognized')
+
     # Checking that the volume number is of type int
     if not isinstance(volume, (int, np.int32)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the issue number is of type int
-    if not isinstance(issue, (int, np.int32)):
+    if journal != 'adgeo' and not isinstance(issue, (int, np.int32)):
         raise TypeError('Issue Number must be of type int')
 
     # Defining the URL with volume number and issue number
-    url = 'https://se.copernicus.org/articles/%s/issue%s.html' % (volume, issue)
+    if journal == 'adgeo':
+        url = 'https://%s.copernicus.org/articles/%s/index.html' % (journal, volume)
+    else:
+        url = 'https://%s.copernicus.org/articles/%s/issue%s.html' % (journal, volume, issue)
 
     # Retrieving website data
     website = get_website_content(url)
 
     # Extracting the DOI numbers
-    dois_se = ['https://doi.org/10.5194' + website.split('https://doi.org/10.5194')[i + 1].split(',')[0] for i in
-               range(len(website.split('https://doi.org/10.5194')) - 1)]
+    dois_copernicus = ['https://doi.org/10.5194' + website.split('https://doi.org/10.5194')[i + 1].split(',')[0] for i
+                       in
+                       range(len(website.split('https://doi.org/10.5194')) - 1)]
 
-    return dois_se
+    return dois_copernicus
 
 
-def download_dois_multiple_issues_solid_earth(volume: int,
-                                              issue_start: int = 1,
-                                              issue_end: int = 20) -> List[str]:
+def download_dois_multiple_issues_copernicus(journal: str = None,
+                                             volume: int = None,
+                                             issue_start: int = None,
+                                             issue_end: int = None) -> List[str]:
     """ Function to download the DOI numbers of multiple Solid Earth Issues of one Volume
 
     Parameters:
@@ -90,16 +126,43 @@ def download_dois_multiple_issues_solid_earth(volume: int,
 
     """
 
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the correct journal identifier is provided
+    if journal not in ['se',
+                       'adgeo',
+                       'gmd',
+                       'esurf',
+                       'esd',
+                       'gc',
+                       'gi',
+                       'hess',
+                       'nhess',
+                       'npg',
+                       'angeo',
+                       'acp',
+                       'amt',
+                       'bg',
+                       'cp',
+                       'gchron',
+                       'os',
+                       'soil',
+                       'tc'
+                       'wcd']:
+        raise ValueError('Journal identifier not recognized')
+
     # Checking that the volume number is of type int
     if not isinstance(volume, (int, np.int32)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the issue number is of type int
-    if not isinstance(issue_start, int):
+    if journal != 'adgeo' and not isinstance(issue_start, int):
         raise TypeError('Issue Number Start must be of type int')
 
     # Checking that the issue number is of type int
-    if not isinstance(issue_end, int):
+    if journal != 'adgeo' and not isinstance(issue_end, int):
         raise TypeError('Issue Number End must be of type int')
 
     # Defining range of issues
@@ -107,20 +170,22 @@ def download_dois_multiple_issues_solid_earth(volume: int,
     issues = np.arange(issue_start, issue_end + 1, step)
 
     # Defining empty list to store DOI Numbers
-    dois_se = []
+    dois_copernicus = []
 
     # Extracting DOI Numbers for each issue and store them in a new list
     for issue_number in issues:
-        dois_one_issue = download_dois_single_issue_solid_earth(volume=volume,
-                                                                issue=issue_number)
+        dois_one_issue = download_dois_single_issue_copernicus(journal=journal,
+                                                               volume=volume,
+                                                               issue=issue_number)
 
-        dois_se = dois_se + dois_one_issue
+        dois_copernicus = dois_copernicus + dois_one_issue
 
-    return dois_se
+    return dois_copernicus
 
 
-def download_dois_solid_earth(volume_start: int = 1,
-                              volume_end: int = 13) -> List[str]:
+def download_dois_copernicus(journal: str = None,
+                             volume_start: int = None,
+                             volume_end: int = None) -> List[str]:
     """ Function to download the DOI numbers of multiple Solid Earth volumes
 
     Parameters:
@@ -134,6 +199,33 @@ def download_dois_solid_earth(volume_start: int = 1,
 
     """
 
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the correct journal identifier is provided
+    if journal not in ['se',
+                       'adgeo',
+                       'gmd',
+                       'esurf',
+                       'esd',
+                       'gc',
+                       'gi',
+                       'hess',
+                       'nhess',
+                       'npg',
+                       'angeo',
+                       'acp',
+                       'amt',
+                       'bg',
+                       'cp',
+                       'gchron',
+                       'os',
+                       'soil',
+                       'tc'
+                       'wcd']:
+        raise ValueError('Journal identifier not recognized')
+
     # Checking that the volume number start is of type int
     if not isinstance(volume_start, int):
         raise TypeError('Volume Number Start must be of type int')
@@ -142,26 +234,23 @@ def download_dois_solid_earth(volume_start: int = 1,
     if not isinstance(volume_end, int):
         raise TypeError('Volume Number End must be of type int')
 
-    # Checking that the current volume is at 13
-    if volume_end > 13:
-        raise ValueError('The current latest volume is number 13')
-
     # Defining range of issues
     step = 1
     volumes = np.arange(volume_start, volume_end + 1, step)
 
     # Defining empty list to store DOI Numbers
-    dois_se = []
+    dois_copernicus = []
 
     # Extracting DOI Numbers for each issue and store them in a new list
     for volume_number in volumes:
-        dois_one_issue = download_dois_multiple_issues_solid_earth(volume=volume_number,
-                                                                   issue_start=1,
-                                                                   issue_end=20)
+        dois_one_issue = download_dois_multiple_issues_copernicus(journal=journal,
+                                                                  volume=volume_number,
+                                                                  issue_start=1,
+                                                                  issue_end=20)
 
-        dois_se = dois_se + dois_one_issue
+        dois_copernicus = dois_copernicus + dois_one_issue
 
-    return dois_se
+    return dois_copernicus
 
 
 def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_number_start: int = 1,
@@ -272,11 +361,15 @@ def create_earth_doc_url(conference_url: str, titles_per_page: int = 20, page_nu
     return url
 
 
-def download_dois_single_volume_zdgg(volume_number: int) -> List[str]:
-    """ FUnction to download the DOI numbers of one ZDGG volume
+def download_dois_single_volume_schweizerbart(journal: str = 'zdgg',
+                                              volume_number: int = None) -> List[str]:
+    """ FUnction to download the DOI numbers of one Schweizerbart Journal volume
 
     Parameters:
     ___________
+
+        journal: str
+            Journal identifier
 
         volume_number : int
             Volume number
@@ -287,48 +380,33 @@ def download_dois_single_volume_zdgg(volume_number: int) -> List[str]:
     if not isinstance(volume_number, (int, np.int32)):
         raise TypeError('Volume Number must be of type int')
 
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the correct journal identifier is provided
+    if journal not in ['zdgg', 'jber_oberrh', 'njgpa']:
+        raise ValueError('Journal identifier not recognized')
+
     # Creating URL
-    url = 'https://www.schweizerbart.de/papers/zdgg/list/%s' % volume_number
+    url = 'https://www.schweizerbart.de/papers/%s/list/%s' % (journal, volume_number)
 
     # Getting Website Data
     website = get_website_content(url=url)
 
-    dois_zdgg = [website.split('DOI: ')[j + 1].split('\n')[0] for j in range(len(website.split('DOI: ')) - 1)]
+    dois_schweizerbart = [website.split('DOI: ')[j + 1].split('\n')[0] for j in range(len(website.split('DOI: ')) - 1)]
 
-    return dois_zdgg
-
-
-def download_dois_single_volume_jmogv(volume_number: int) -> List[str]:
-    """ FUnction to download the DOI numbers of one JMOGV volume
-
-    Parameters:
-    ___________
-
-        volume_number : int
-            Volume number
-
-    """
-
-    # Checking that the volume number is of type int
-    if not isinstance(volume_number, (int, np.int32)):
-        raise TypeError('Volume Number must be of type int')
-
-    # Creating URL
-    url = 'https://www.schweizerbart.de/papers/jber_oberrh/list/%s' % volume_number
-
-    # Getting Website Data
-    website = get_website_content(url=url)
-
-    dois_jmogv = [website.split('DOI: ')[j+1].split('\n')[0] for j in range(len(website.split('DOI: '))-1)]
-
-    return dois_jmogv
+    return dois_schweizerbart
 
 
-def download_dois_multiple_volumes_zdgg(volume_start: int, volume_end: int = 172) -> List[str]:
-    """ Function to download DOI numbers of multiple ZDGG volumes
+def download_dois_multiple_volumes_schweizerbart(journal: str, volume_start: int, volume_end: int = 172) -> List[str]:
+    """ Function to download DOI numbers of multiple Schweizerbart Journal volumes
 
     Parameters:
     ___________
+
+        journal: str
+            Journal identifier
 
         volume_start: int
             Volume number start
@@ -338,47 +416,13 @@ def download_dois_multiple_volumes_zdgg(volume_start: int, volume_end: int = 172
 
     """
 
-    # Checking that the volume number start is of type int
-    if not isinstance(volume_start, int):
-        raise TypeError('Volume Number Start must be of type int')
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
 
-    # Checking that the volume number end is of type int
-    if not isinstance(volume_end, int):
-        raise TypeError('Volume Number End must be of type int')
-
-    # Checking that the current volume is at 13
-    if volume_end > 172:
-        raise ValueError('The current latest volume is number 172')
-
-    # Defining range of issues
-    step = 1
-    volumes = np.arange(volume_start, volume_end + 1, step)
-
-    # Defining empty list to store DOI Numbers
-    dois_zdgg = []
-
-    # Extracting DOI Numbers for each issue and store them in a new list
-    for volume_number in volumes:
-        dois_single_issue = download_dois_single_volume_zdgg(volume_number=volume_number)
-
-        dois_zdgg = dois_zdgg + dois_single_issue
-
-    return dois_zdgg
-
-
-def download_dois_multiple_volumes_jmogv(volume_start: int, volume_end: int = 172) -> List[str]:
-    """ Function to download DOI numbers of multiple JMOGV volumes
-
-    Parameters:
-    ___________
-
-        volume_start: int
-            Volume number start
-
-        volume_end: int
-            Volume number end
-
-    """
+    # Checking that the correct journal identifier is provided
+    if journal not in ['zdgg', 'jber_oberrh', 'njgpa']:
+        raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number start is of type int
     if not isinstance(volume_start, int):
@@ -388,92 +432,21 @@ def download_dois_multiple_volumes_jmogv(volume_start: int, volume_end: int = 17
     if not isinstance(volume_end, int):
         raise TypeError('Volume Number End must be of type int')
 
-    # Checking that the current volume is at 13
-    if volume_end > 103:
-        raise ValueError('The current latest volume is number 103')
-
     # Defining range of issues
     step = 1
     volumes = np.arange(volume_start, volume_end + 1, step)
 
     # Defining empty list to store DOI Numbers
-    dois_jmogv = []
+    dois_schweizerbart = []
 
     # Extracting DOI Numbers for each issue and store them in a new list
     for volume_number in volumes:
-        dois_single_issue = download_dois_single_volume_jmogv(volume_number=volume_number)
+        dois_single_issue = download_dois_single_volume_schweizerbart(journal=journal,
+                                                                      volume_number=volume_number)
 
-        dois_jmogv = dois_jmogv + dois_single_issue
+        dois_schweizerbart = dois_schweizerbart + dois_single_issue
 
-    return dois_jmogv
-
-
-def download_dois_single_volume_njgpa(volume_number: int) -> List[str]:
-    """ FUnction to download the DOI numbers of one NJGPA volume
-
-    Parameters:
-    ___________
-
-        volume_number : int
-            Volume number
-
-    """
-
-    # Checking that the volume number is of type int
-    if not isinstance(volume_number, (int, np.int32)):
-        raise TypeError('Volume Number must be of type int')
-
-    # Creating URL
-    url = 'https://www.schweizerbart.de/papers/njgpa/list/%s' % volume_number
-
-    # Getting Website Data
-    website = get_website_content(url=url)
-
-    dois_njgpa = [website.split('DOI: ')[j+1].split('\n')[0] for j in range(len(website.split('DOI: '))-1)]
-
-    return dois_njgpa
-
-
-def download_dois_multiple_volumes_njgpa(volume_start: int, volume_end: int = 172) -> List[str]:
-    """ Function to download DOI numbers of multiple NJGPA volumes
-
-    Parameters:
-    ___________
-
-        volume_start: int
-            Volume number start
-
-        volume_end: int
-            Volume number end
-
-    """
-
-    # Checking that the volume number start is of type int
-    if not isinstance(volume_start, int):
-        raise TypeError('Volume Number Start must be of type int')
-
-    # Checking that the volume number end is of type int
-    if not isinstance(volume_end, int):
-        raise TypeError('Volume Number End must be of type int')
-
-    # Checking that the current volume is at 13
-    if volume_end > 303:
-        raise ValueError('The current latest volume is number 303')
-
-    # Defining range of issues
-    step = 1
-    volumes = np.arange(volume_start, volume_end + 1, step)
-
-    # Defining empty list to store DOI Numbers
-    dois_njgpa = []
-
-    # Extracting DOI Numbers for each issue and store them in a new list
-    for volume_number in volumes:
-        dois_single_issue = download_dois_single_volume_njgpa(volume_number=volume_number)
-
-        dois_njgpa = dois_njgpa + dois_single_issue
-
-    return dois_njgpa
+    return dois_schweizerbart
 
 
 def save_doi_numbers(list_dois: list,
