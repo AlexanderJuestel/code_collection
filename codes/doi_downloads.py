@@ -6,6 +6,7 @@ Contributors: Alexander Jüstel
 import numpy as np
 import urllib3
 from typing import List
+import os
 
 
 def get_website_content(url: str):
@@ -162,7 +163,7 @@ def download_dois_multiple_issues_copernicus(journal: str = '',
         raise TypeError('Issue Number Start must be of type int')
 
     # Checking that the issue number is of type int
-    if journal != 'adgeo' and not isinstance(issue_end, int):
+    if journal != 'adgeo' and not isinstance(issue_end, (int, np.integer)):
         raise TypeError('Issue Number End must be of type int')
 
     # Defining range of issues
@@ -253,7 +254,9 @@ def download_dois_copernicus(journal: str = '',
     return dois_copernicus
 
 
-def download_dois_earthdoc(conference_url: str, titles_per_page: int = 20, page_number_start: int = 1,
+def download_dois_earthdoc(conference_url: str,
+                           titles_per_page: int = 20,
+                           page_number_start: int = 1,
                            page_number_end: int = 100):
     """ Function to download EarthDoc DOI Numbers
 
@@ -613,7 +616,7 @@ def download_dois_hindawi_journal(journal: str,
 
 
 def save_doi_numbers(list_dois: list,
-                     path: str):
+                     path: str = None):
     """Function to save list of DOIs to a text file
 
     Parameters:
@@ -632,8 +635,12 @@ def save_doi_numbers(list_dois: list,
         raise TypeError('List of DOIs must be provided as list')
 
     # Checking that the path is of type string
-    if not isinstance(path, str):
+    if not isinstance(path, (str, type(None))):
         raise TypeError('Path must be of type string')
+
+    # Setting a path if path es None
+    if isinstance(path, type(None)):
+        path = os.path.abspath(os.getcwd()) + 'DOIs.txt'
 
     # Save DOI Numbers as text file
     with open(path, 'w') as f:
