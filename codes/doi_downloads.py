@@ -46,7 +46,7 @@ def download_dois_single_issue_copernicus(journal: str = '',
         journal: str
             Journal identifier
 
-        volume: int, np.int32
+        volume: int, np.integer
             Volume Number
 
         issue: int
@@ -115,7 +115,7 @@ def download_dois_multiple_issues_copernicus(journal: str = '',
     Parameters:
     ___________
 
-        volume: int, np.int32
+        volume: int, np.integer
             Volume Number
 
         issue_start: int
@@ -154,7 +154,7 @@ def download_dois_multiple_issues_copernicus(journal: str = '',
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number is of type int
-    if not isinstance(volume, (int, np.int32)):
+    if not isinstance(volume, (int, np.integer)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the issue number is of type int
@@ -344,7 +344,7 @@ def create_earth_doc_url(conference_url: str, titles_per_page: int = 20, page_nu
         raise TypeError('The title of pages attribute must be of type int')
 
     # Checking that the page number is of type int
-    if not isinstance(page_number, (int, np.int32)):
+    if not isinstance(page_number, (int, np.integer)):
         raise TypeError('The page number must be provided as int')
 
     # Checking that the titles per page attribute is only either 20, 50 or 100
@@ -377,7 +377,7 @@ def download_dois_single_volume_schweizerbart(journal: str = 'zdgg',
     """
 
     # Checking that the volume number is of type int
-    if not isinstance(volume_number, (int, np.int32)):
+    if not isinstance(volume_number, (int, np.integer)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the journal identifier is of type str
