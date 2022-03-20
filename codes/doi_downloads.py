@@ -82,11 +82,11 @@ def download_dois_single_issue_copernicus(journal: str = '',
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number is of type int
-    if not isinstance(volume, (int, np.int32, numpy.int32)):
+    if not isinstance(volume, (int, np.integer)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the issue number is of type int
-    if journal != 'adgeo' and not isinstance(issue, (int, np.int32)):
+    if journal != 'adgeo' and not isinstance(issue, (int, np.integer)):
         raise TypeError('Issue Number must be of type int')
 
     # Defining the URL with volume number and issue number
