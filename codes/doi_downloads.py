@@ -449,6 +449,169 @@ def download_dois_multiple_volumes_schweizerbart(journal: str, volume_start: int
     return dois_schweizerbart
 
 
+def download_doi_one_page_hindawi_journal(journal: str,
+                                          year: int,
+                                          page_number: int) -> list:
+    """Function to download the DOI Number for on Hindawi Journal Article
+
+    Parameters:
+    ___________
+
+        journal: str
+            Journal identifier
+
+        year: int
+            Year of the Hindawi journal article
+
+        page_number: int
+            Page number on the Hindawi Journal page
+
+    """
+
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the year is of type int
+    if not isinstance(year, (int, np.integer)):
+        raise TypeError('The year must be provided as type int')
+
+    # Checking that the page number is of type int
+    if not isinstance(page_number, (int, np.integer)):
+        raise TypeError('The page number must be provided as int')
+
+    # Creating URL
+    url = 'https://www.hindawi.com/journals/%s/contents/year/%s/page/%s/' % (journal, year, page_number)
+
+    # Getting website content
+    website = get_website_content(url=url)
+
+    # Extracting the DOI numbers
+    dois_one_page_hindawi = [
+        'https://doi.org/10.1155/%s/' % year + website.split('Article ID ')[i + 1].split('</li>')[0] for i
+        in range(len(website.split('Article ID ')) - 1)]
+
+    return dois_one_page_hindawi
+
+
+def download_dois_multiple_pages_hindawi_journal(journal: str,
+                                                 year: int,
+                                                 page_number_start: int,
+                                                 page_number_end: int) -> list:
+    """
+
+    Parameters:
+    ___________
+
+        journal: str
+            Journal identifier
+
+        year: int
+            Year on the Hindawi journal articles
+
+        page_number_start: int
+            Page number start on the Hindawi Journal page
+
+        page_number_end: int
+            Page number end on the Hindawi Journal page
+
+    """
+
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the year is of type int
+    if not isinstance(year, (int, np.integer)):
+        raise TypeError('The year must be provided as type int')
+
+    # Checking that the page number start is of type int
+    if not isinstance(page_number_start, (int, np.integer)):
+        raise TypeError('The page number start must be provided as int')
+
+    # Checking that the page number end is of type int
+    if not isinstance(page_number_end, (int, np.integer)):
+        raise TypeError('The page number end must be provided as int')
+
+    # Creating empty list for DOI Numbers
+    dois_hindawi = []
+
+    # Creating array of pages
+    pages = np.arange(page_number_start, page_number_end + 1, 1)
+
+    # Extracting DOI Numbers
+    for page in pages:
+        dois_single_page = download_doi_one_page_hindawi_journal(journal=journal,
+                                                                  year=year,
+                                                                  page_number=page)
+
+        dois_hindawi = dois_hindawi + dois_single_page
+
+    return dois_hindawi
+
+
+def download_dois_hindawi_journal(journal: str,
+                                  year_start: int,
+                                  year_end: int,
+                                  page_number_start: int = 1,
+                                  page_number_end: int = 20) -> list:
+    """
+
+        Parameters:
+        ___________
+
+            journal: str
+                Journal identifier
+
+            year: int
+                Year on the Hindawi journal articles
+
+            page_number_start: int
+                Page number start on the Hindawi Journal page
+
+            page_number_end: int
+                Page number end on the Hindawi Journal page
+
+        """
+
+    # Checking that the journal identifier is of type str
+    if not isinstance(journal, str):
+        raise TypeError('Journal identifier must be provided as string')
+
+    # Checking that the year start is of type int
+    if not isinstance(year_start, int):
+        raise TypeError('The year start must be provided as type int')
+
+    # Checking that the year end is of type int
+    if not isinstance(year_end, int):
+        raise TypeError('The year end must be provided as type int')
+
+    # Checking that the page number start is of type int
+    if not isinstance(page_number_start, (int, np.integer)):
+        raise TypeError('The page number start must be provided as int')
+
+    # Checking that the page number end is of type int
+    if not isinstance(page_number_end, (int, np.integer)):
+        raise TypeError('The page number end must be provided as int')
+
+    # Creating empty list for DOI Numbers
+    dois_hindawi = []
+
+    # Creating array of years
+    years = np.arange(year_start, year_end + 1, 1)
+
+    # Extracting DOI Numbers
+    for year in years:
+        dois_multiple_pages = download_dois_multiple_pages_hindawi_journal(journal=journal,
+                                                                           year=year,
+                                                                           page_number_start=page_number_start,
+                                                                           page_number_end=page_number_end)
+
+        dois_hindawi = dois_hindawi + dois_multiple_pages
+
+    return dois_hindawi
+
+
 def save_doi_numbers(list_dois: list,
                      path: str):
     """Function to save list of DOIs to a text file
