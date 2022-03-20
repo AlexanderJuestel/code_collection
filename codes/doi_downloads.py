@@ -35,7 +35,7 @@ def get_website_content(url: str):
     return website
 
 
-def download_dois_single_issue_copernicus(journal: str = None,
+def download_dois_single_issue_copernicus(journal: str = '',
                                           volume: int = None,
                                           issue: int = None) -> List[str]:
     """Function to download the DOI numbers of one Solid Earth Issue of one Volume
@@ -82,7 +82,7 @@ def download_dois_single_issue_copernicus(journal: str = None,
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number is of type int
-    if not isinstance(volume, (int, np.int32)):
+    if not isinstance(volume, (int, np.int32, numpy.int32)):
         raise TypeError('Volume Number must be of type int')
 
     # Checking that the issue number is of type int
@@ -106,7 +106,7 @@ def download_dois_single_issue_copernicus(journal: str = None,
     return dois_copernicus
 
 
-def download_dois_multiple_issues_copernicus(journal: str = None,
+def download_dois_multiple_issues_copernicus(journal: str = '',
                                              volume: int = None,
                                              issue_start: int = None,
                                              issue_end: int = None) -> List[str]:
@@ -183,7 +183,7 @@ def download_dois_multiple_issues_copernicus(journal: str = None,
     return dois_copernicus
 
 
-def download_dois_copernicus(journal: str = None,
+def download_dois_copernicus(journal: str = '',
                              volume_start: int = None,
                              volume_end: int = None) -> List[str]:
     """ Function to download the DOI numbers of multiple Solid Earth volumes
