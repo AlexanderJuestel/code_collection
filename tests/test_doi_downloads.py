@@ -5,6 +5,7 @@ Contributors: Alexander Jüstel
 
 import pytest
 import sys
+import numpy as np
 sys.path.insert(0, '../')
 
 
