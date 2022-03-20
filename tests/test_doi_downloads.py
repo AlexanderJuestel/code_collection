@@ -4,6 +4,8 @@ Contributors: Alexander Jüstel
 """
 
 import pytest
+import sys
+sys.path.insert(0, '../')
 
 
 def test_get_website_content():
@@ -17,7 +19,9 @@ def test_get_website_content():
 def test_download_dois_single_issue_copernicus():
     from codes.doi_downloads import download_dois_single_issue_copernicus
 
-    dois_se = download_dois_single_issue_copernicus(volume=1, issue=1)
+    dois_se = download_dois_single_issue_copernicus(journal='se',
+                                                    volume=1,
+                                                    issue=1)
     assert isinstance(dois_se, list)
     assert all(isinstance(doi, str) for doi in dois_se)
 
@@ -25,9 +29,10 @@ def test_download_dois_single_issue_copernicus():
 def test_download_dois_multiple_issues_copernicus():
     from codes.doi_downloads import download_dois_multiple_issues_copernicus
 
-    dois_se = download_dois_multiple_issues_copernicus(volume=7,
+    dois_se = download_dois_multiple_issues_copernicus(journal='se',
+                                                       volume=7,
                                                        issue_start=1,
-                                                       issue_end=5)
+                                                       issue_end=2)
     assert isinstance(dois_se, list)
     assert all(isinstance(doi, str) for doi in dois_se)
 
@@ -35,8 +40,9 @@ def test_download_dois_multiple_issues_copernicus():
 def test_download_dois_copernicus():
     from codes.doi_downloads import download_dois_copernicus
 
-    dois_se = download_dois_copernicus(volume_start=1,
-                                       volume_end=4)
+    dois_se = download_dois_copernicus(journal='se',
+                                       volume_start=1,
+                                       volume_end=2)
     assert isinstance(dois_se, list)
     assert all(isinstance(doi, str) for doi in dois_se)
 
@@ -64,7 +70,7 @@ def test_create_earth_doc_url():
 def test_download_dois_earthdoc():
     from codes.doi_downloads import download_dois_earthdoc
 
-    dois_eage = download_dois_earthdoc(conference_url='eageannual2021')
+    dois_eage = download_dois_earthdoc(conference_url='eageannual2021', page_number_start=1, page_number_end=2)
 
     assert isinstance(dois_eage, list)
     assert all(isinstance(doi, str) for doi in dois_eage)
