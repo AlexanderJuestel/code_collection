@@ -34,8 +34,7 @@ jobs:
           pip install coverage
           coverage run -m pytest
       - name: Upload Coverage to Codecov
-        - uses: actions/checkout@master
-        - uses: codecov/codecov-action@v2
-          with:
-            token: ${{secrets.CODECOV}}
-            version: "v0.1.18"
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{secrets.CODECOV}}
+          version: "v0.1.18"
