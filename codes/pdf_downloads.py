@@ -61,7 +61,7 @@ def download_pdf_copernicus(doi: str,
     volume, page_number, year = ending.split('%s-' % journal)[1].split('-')
 
     # Creating download URL
-    url = 'https://se.copernicus.org/articles/%s/%s/%s/%s.pdf' % (volume, page_number, year, ending)
+    url = 'https://%s.copernicus.org/articles/%s/%s/%s/%s.pdf' % (journal, volume, page_number, year, ending)
 
     # Downloading PDF
     Path('%s.pdf' % (path + ending)).write_bytes(requests.get(url).content)
