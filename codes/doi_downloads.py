@@ -100,9 +100,9 @@ def download_dois_single_issue_copernicus(journal: str = '',
     website = get_website_content(url)
 
     # Extracting the DOI numbers
-    dois_copernicus = set(['https://doi.org/10.5194' + website.split('https://doi.org/10.5194')[i + 1].split(',')[0] for i
+    dois_copernicus = list(set(['https://doi.org/10.5194' + website.split('https://doi.org/10.5194')[i + 1].split(',')[0] for i
                        in
-                       range(len(website.split('https://doi.org/10.5194')) - 1)])
+                       range(len(website.split('https://doi.org/10.5194')) - 1)]))
 
     return dois_copernicus
 
