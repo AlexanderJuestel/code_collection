@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+data/heat_demand_mapping/tif_results
+notebooks/heat_demand_mapping/processing_results/Statistics_Commercial_Heat_Demand.csv
+notebooks/heat_demand_mapping/processing_results/Statistics_Residential_Heat_Demand.csv
+notebooks/heat_demand_mapping/processing_results/Statistics_Total_Heat_Demand.csv
