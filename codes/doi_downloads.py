@@ -79,7 +79,8 @@ def download_dois_single_issue_copernicus(journal: str = '',
                        'os',
                        'soil',
                        'tc'
-                       'wcd']:
+                       'wcd',
+                       'essd']:
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number is of type int
@@ -151,7 +152,8 @@ def download_dois_multiple_issues_copernicus(journal: str = '',
                        'os',
                        'soil',
                        'tc'
-                       'wcd']:
+                       'wcd',
+                       'essd']:
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number is of type int
@@ -224,7 +226,8 @@ def download_dois_copernicus(journal: str = '',
                        'os',
                        'soil',
                        'tc'
-                       'wcd']:
+                       'wcd',
+                       'essd']:
         raise ValueError('Journal identifier not recognized')
 
     # Checking that the volume number start is of type int
