@@ -1,0 +1,11 @@
+Region,Area (planimetric) [km2],Area (ellipsoidal) [km2],Share of Total Area [%],Commercial HD [TWh],Share of Commercial HD [%],Average of Commercial HD [MWh/ha],Average of heated area of Commercial HD [MWh/ha],Area of heat demand [km2],Share of heated heat demand area [%]
+Interreg NWE,788016,842824,100.0,557.1,100.0,6.6,70.2,79312.0,9.4
+Germany,136800,146607,17.4,266.4,47.8,18.2,94.3,28263.4,19.3
+Great Britain,154556,165486,19.6,102.0,18.3,6.2,38.5,26529.4,16.0
+France,260768,279030,33.1,95.7,17.2,3.4,92.8,10316.7,3.7
+Belgium,28595,30665,3.6,31.1,5.6,10.1,72.1,4314.9,14.1
+Schweiz/Suisse/Svizzera,38663,41263,4.9,26.9,4.8,6.5,96.3,2788.5,6.8
+Netherlands,26826,28755,3.4,21.8,3.9,7.6,106.9,2039.4,7.1
+Ireland,65150,69738,8.3,10.4,1.9,1.5,22.7,4569.1,6.6
+Luxembourg,2421,2596,0.3,2.8,0.5,10.6,56.3,490.2,18.9
+Scotland,74237,78684,9.3,0.0,0.0,0.0,0.0,0.0,0.0
